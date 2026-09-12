@@ -1,0 +1,15 @@
+aws_region                  = "ap-south-1"
+environment                 = "dev"
+cluster_public_access_cidrs = ["203.0.113.10/32"]
+github_repository           = "your-github-user/histdata-app"
+github_deploy_repository    = "your-github-user/histdata-k8s-deployments"
+
+# Add these when the application hostname is ready.
+domain_name    = "histdata.example.com"
+hosted_zone_id = "Z000000000000EXAMPLE"
+
+# Enable only after activating a real DataSync agent near the NFS source.
+enable_datasync         = false
+datasync_agent_arn      = ""
+onprem_nfs_server       = ""
+onprem_nfs_subdirectory = "/histdata"
