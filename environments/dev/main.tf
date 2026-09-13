@@ -57,17 +57,18 @@ module "rds" {
 }
 
 module "iam" {
-  source             = "../../modules/iam"
-  name               = local.name
-  oidc_provider_arn  = module.eks.oidc_provider_arn
-  oidc_issuer_url    = module.eks.oidc_issuer_url
-  data_bucket_arn    = module.storage.bucket_arn
-  application_secret_arn = module.rds.application_secret_arn
-  ecr_repository_arn = module.ecr.repository_arn
-  github_repository  = var.github_repository
-  github_deploy_repository = var.github_deploy_repository
-  eks_cluster_arn           = module.eks.cluster_arn
-  tags               = local.common_tags
+  source                   = "../../modules/iam"
+  name                     = local.name
+  oidc_provider_arn        = module.eks.oidc_provider_arn
+  oidc_issuer_url          = module.eks.oidc_issuer_url
+  data_bucket_arn          = module.storage.bucket_arn
+  application_secret_arn   = module.rds.application_secret_arn
+  ecr_repository_arn       = module.ecr.repository_arn
+  eks_cluster_arn          = module.eks.cluster_arn
+  github_oidc_provider_arn = var.github_oidc_provider_arn
+  github_app_subject       = var.github_app_subject
+  github_deploy_subject    = var.github_deploy_subject
+  tags                     = local.common_tags
 }
 
 resource "aws_eks_access_entry" "github_deploy" {

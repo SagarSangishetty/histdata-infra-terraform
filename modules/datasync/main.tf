@@ -40,7 +40,7 @@ resource "aws_iam_role_policy" "s3" {
 }
 
 resource "aws_datasync_location_nfs" "source" {
-  count          = var.enabled ? 1 : 0
+  count           = var.enabled ? 1 : 0
   server_hostname = var.nfs_server_hostname
   subdirectory    = var.nfs_subdirectory
   on_prem_config { agent_arns = [var.agent_arn] }

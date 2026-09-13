@@ -28,6 +28,8 @@ resource "aws_s3_bucket_lifecycle_configuration" "data" {
   rule {
     id     = "archive-old-versions"
     status = "Enabled"
+    # Empty filter means the rule applies to all objects.
+    filter {}
     noncurrent_version_transition {
       noncurrent_days = 30
       storage_class   = "STANDARD_IA"

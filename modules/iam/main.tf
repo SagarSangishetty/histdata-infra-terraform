@@ -171,29 +171,26 @@ resource "aws_iam_role_policy" "alb_controller" {
   })
 }
 
-resource "aws_iam_openid_connect_provider" "github" {
-  url             = "https://token.actions.githubusercontent.com"
-  client_id_list  = ["sts.amazonaws.com"]
-  thumbprint_list = ["6938fd4d98bab03faadb97b34396831e3780aea1"]
-  tags            = var.tags
-}
-
+# GitHub Actions role used by the application repository to push images to ECR.
 data "aws_iam_policy_document" "github_assume" {
   statement {
     actions = ["sts:AssumeRoleWithWebIdentity"]
+
     principals {
       type        = "Federated"
-      identifiers = [aws_iam_openid_connect_provider.github.arn]
+      identifiers = [var.github_oidc_provider_arn]
     }
+
     condition {
       test     = "StringEquals"
       variable = "token.actions.githubusercontent.com:aud"
       values   = ["sts.amazonaws.com"]
     }
+
     condition {
-      test     = "StringLike"
+      test     = "StringEquals"
       variable = "token.actions.githubusercontent.com:sub"
-      values   = ["repo:${var.github_repository}:*"]
+      values   = [var.github_app_subject]
     }
   }
 }
@@ -207,8 +204,10 @@ resource "aws_iam_role" "github_actions" {
 resource "aws_iam_role_policy" "github_ecr" {
   name = "push-histdata-image"
   role = aws_iam_role.github_actions.id
+
   policy = jsonencode({
     Version = "2012-10-17"
+
     Statement = [
       {
         Effect   = "Allow"
@@ -218,8 +217,13 @@ resource "aws_iam_role_policy" "github_ecr" {
       {
         Effect = "Allow"
         Action = [
-          "ecr:BatchCheckLayerAvailability", "ecr:GetDownloadUrlForLayer", "ecr:BatchGetImage",
-          "ecr:InitiateLayerUpload", "ecr:UploadLayerPart", "ecr:CompleteLayerUpload", "ecr:PutImage"
+          "ecr:BatchCheckLayerAvailability",
+          "ecr:GetDownloadUrlForLayer",
+          "ecr:BatchGetImage",
+          "ecr:InitiateLayerUpload",
+          "ecr:UploadLayerPart",
+          "ecr:CompleteLayerUpload",
+          "ecr:PutImage"
         ]
         Resource = var.ecr_repository_arn
       }
@@ -227,22 +231,26 @@ resource "aws_iam_role_policy" "github_ecr" {
   })
 }
 
+# GitHub Actions role used by the Kubernetes deployment repository.
 data "aws_iam_policy_document" "github_deploy_assume" {
   statement {
     actions = ["sts:AssumeRoleWithWebIdentity"]
+
     principals {
       type        = "Federated"
-      identifiers = [aws_iam_openid_connect_provider.github.arn]
+      identifiers = [var.github_oidc_provider_arn]
     }
+
     condition {
       test     = "StringEquals"
       variable = "token.actions.githubusercontent.com:aud"
       values   = ["sts.amazonaws.com"]
     }
+
     condition {
-      test     = "StringLike"
+      test     = "StringEquals"
       variable = "token.actions.githubusercontent.com:sub"
-      values   = ["repo:${var.github_deploy_repository}:*"]
+      values   = [var.github_deploy_subject]
     }
   }
 }
@@ -256,8 +264,10 @@ resource "aws_iam_role" "github_deploy" {
 resource "aws_iam_role_policy" "github_deploy" {
   name = "describe-eks-cluster"
   role = aws_iam_role.github_deploy.id
+
   policy = jsonencode({
     Version = "2012-10-17"
+
     Statement = [{
       Effect   = "Allow"
       Action   = ["eks:DescribeCluster"]

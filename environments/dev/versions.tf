@@ -1,5 +1,5 @@
 terraform {
-  required_version = ">= 1.7.0"
+  required_version = ">= 1.10.0"
 
   required_providers {
     aws = {
@@ -11,15 +11,4 @@ terraform {
       version = "~> 4.0"
     }
   }
-
-  backend "s3" {}
 }
-
-provider "aws" {
-  region = var.aws_region
-
-  default_tags {
-    tags = local.common_tags
-  }
-}
-

@@ -20,20 +20,52 @@ from the application and Kubernetes configuration.
 EKS, NAT Gateway, RDS Oracle, ALB, and DataSync are billable. Use a dedicated
 lab account, create an AWS Budget first, and destroy resources after practice.
 
-## State bootstrap
+## State and GitHub OIDC bootstrap
 
-Create the backend once:
+State is stored in the private, encrypted, versioned S3 bucket. Terraform uses
+an S3 lock file to prevent concurrent state modification. DynamoDB locking is
+not required.
+
+Create the state bucket once using temporary local state:
 
 ```bash
 cd bootstrap/state-backend
 terraform init
-terraform apply -var='state_bucket_name=<globally-unique-name>'
+terraform plan \
+  -var='state_bucket_name=histdata-terraform-state-935776475838-ap-south-1' \
+  -out=tfplan
+terraform apply tfplan
 ```
 
-Copy the output values into `environments/dev/backend.hcl`, then initialize:
+After the bucket exists, migrate the bootstrap state into that bucket:
 
 ```bash
-cd environments/dev
+cp backend.tf.example backend.tf
+cp backend.hcl.example backend.hcl
+terraform init -migrate-state -backend-config=backend.hcl
+```
+
+Commit `backend.tf` and `.terraform.lock.hcl`. Never commit `backend.hcl`, state,
+plan files, credentials, or `.auto.tfvars` files.
+
+Create the GitHub OIDC provider and Terraform role. Its state is stored under a
+separate S3 key:
+
+```bash
+cd ../github-oidc
+cp backend.hcl.example backend.hcl
+terraform init -backend-config=backend.hcl
+terraform plan -out=tfplan
+terraform apply tfplan
+```
+
+Copy `github_actions_role_arn` from the output. GitHub Actions uses this role
+with temporary OIDC credentials; no AWS access keys are stored in GitHub.
+
+Create `environments/dev/backend.hcl`, then initialize the main Dev stack:
+
+```bash
+cd ../../environments/dev
 cp backend.hcl.example backend.hcl
 cp dev.auto.tfvars.example dev.auto.tfvars
 terraform init -backend-config=backend.hcl
@@ -42,8 +74,6 @@ terraform validate
 terraform plan -out=tfplan
 terraform apply tfplan
 ```
-
-Never commit `backend.hcl`, `.auto.tfvars`, state, plans, or credentials.
 
 ## DataSync
 

@@ -1,6 +1,6 @@
 variable "aws_region" {
   type    = string
-  default = "ap-south-1"
+  default = "us-east-1"
 }
 
 variable "project_name" {
@@ -20,7 +20,7 @@ variable "vpc_cidr" {
 
 variable "availability_zones" {
   type    = list(string)
-  default = ["ap-south-1a", "ap-south-1b"]
+  default = ["us-east-1a", "us-east-1b"]
 }
 
 variable "cluster_public_access_cidrs" {
@@ -74,14 +74,19 @@ variable "oracle_deletion_protection" {
   default = false
 }
 
-variable "github_repository" {
+variable "github_oidc_provider_arn" {
   type        = string
-  description = "Application repository in owner/name format"
+  description = "ARN of the shared GitHub Actions OIDC provider"
 }
 
-variable "github_deploy_repository" {
+variable "github_app_subject" {
   type        = string
-  description = "Kubernetes deployment repository in owner/name format"
+  description = "OIDC subject for the application repository"
+}
+
+variable "github_deploy_subject" {
+  type        = string
+  description = "OIDC subject for the Kubernetes deployment repository"
 }
 
 variable "domain_name" {
