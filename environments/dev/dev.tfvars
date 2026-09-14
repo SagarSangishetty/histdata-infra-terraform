@@ -9,8 +9,10 @@ github_app_subject       = "repo:SagarSangishetty@143182794/histdata-app@1367058
 github_deploy_subject    = "repo:SagarSangishetty@143182794/histdata-k8s-deployments@1367082451:ref:refs/heads/main"
 sso_admin_role_arn       = "arn:aws:iam::935776475838:role/aws-reserved/sso.amazonaws.com/AWSReservedSSO_AdministratorAccess_2b6037c295c49db8"
 
-domain_name                 = "dev.histdata.sagarshetty.online"
-hosted_zone_id              = "Z04001601UWG9BF9XIIU5"
+domain_name    = "dev.histdata.sagarshetty.online"
+hosted_zone_id = "Z04001601UWG9BF9XIIU5"
+
+cluster_public_access_cidrs = ["YOUR_ADMIN_CIDR_HERE"]  # Add this line
 
 enable_datasync         = false
 datasync_agent_arn      = ""
