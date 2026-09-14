@@ -18,7 +18,3 @@ variable "github_deploy_subject" {
   type        = string
   description = "OIDC subject for the Kubernetes deployment repository"
 }
-variable "sso_admin_role_arn" {
-  description = "IAM Identity Center role allowed to administer the EKS cluster"
-  type        = string
-}

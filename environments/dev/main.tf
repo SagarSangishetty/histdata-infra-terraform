@@ -68,8 +68,8 @@ module "iam" {
   github_oidc_provider_arn = var.github_oidc_provider_arn
   github_app_subject       = var.github_app_subject
   github_deploy_subject    = var.github_deploy_subject
-  sso_admin_role_arn = var.sso_admin_role_arn
   tags                     = local.common_tags
+
 }
 
 resource "aws_eks_access_entry" "github_deploy" {
@@ -105,4 +105,20 @@ module "datasync" {
   s3_bucket_arn       = module.storage.bucket_arn
   schedule_expression = var.datasync_schedule_expression
   tags                = local.common_tags
+}
+
+resource "aws_eks_access_entry" "sso_admin" {
+  cluster_name  = module.eks.cluster_name
+  principal_arn = var.sso_admin_role_arn
+  type          = "STANDARD"
+}
+
+resource "aws_eks_access_policy_association" "sso_admin" {
+  cluster_name  = module.eks.cluster_name
+  principal_arn = aws_eks_access_entry.sso_admin.principal_arn
+  policy_arn    = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSClusterAdminPolicy"
+
+  access_scope {
+    type = "cluster"
+  }
 }
