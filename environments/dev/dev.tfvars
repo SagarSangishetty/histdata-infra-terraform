@@ -12,7 +12,7 @@ sso_admin_role_arn       = "arn:aws:iam::935776475838:role/aws-reserved/sso.amaz
 domain_name    = "dev.histdata.sagarshetty.online"
 hosted_zone_id = "Z04001601UWG9BF9XIIU5"
 
-cluster_public_access_cidrs = ["YOUR_ADMIN_CIDR_HERE"]  # Add this line
+cluster_public_access_cidrs = ["YOUR_ADMIN_CIDR_HERE"] # Add this line
 
 enable_datasync         = false
 datasync_agent_arn      = ""
