@@ -275,3 +275,22 @@ resource "aws_iam_role_policy" "github_deploy" {
     }]
   })
 }
+
+resource "aws_eks_access_entry" "sso_admin" {
+  cluster_name  = module.eks.cluster_name
+  principal_arn = var.sso_admin_role_arn
+  type          = "STANDARD"
+}
+
+resource "aws_eks_access_policy_association" "sso_admin" {
+  cluster_name  = module.eks.cluster_name
+  principal_arn = aws_eks_access_entry.sso_admin.principal_arn
+  policy_arn    = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSClusterAdminPolicy"
+
+  access_scope {
+    type = "cluster"
+  }
+}
+
+
+
