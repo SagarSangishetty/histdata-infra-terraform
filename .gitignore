@@ -3,10 +3,9 @@
 *.tfstate.*
 *.tfplan
 crash.log
-.terraform.lock.hcl
+backend.hcl
 *.auto.tfvars
 !*.auto.tfvars.example
 terraform.tfvars
 !*.tfvars.example
 tfplan
-*.tfplan
