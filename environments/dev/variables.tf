@@ -126,3 +126,8 @@ variable "datasync_schedule_expression" {
   default     = "cron(0 18 * * ? *)"
   description = "Daily UTC DataSync schedule; adjust to the trading-team delivery window"
 }
+
+variable "sso_admin_role_arn" {
+  description = "IAM Identity Center role granted EKS administrator access"
+  type        = string
+}

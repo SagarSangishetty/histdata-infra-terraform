@@ -68,6 +68,7 @@ module "iam" {
   github_oidc_provider_arn = var.github_oidc_provider_arn
   github_app_subject       = var.github_app_subject
   github_deploy_subject    = var.github_deploy_subject
+  sso_admin_role_arn = var.sso_admin_role_arn
   tags                     = local.common_tags
 }
 
