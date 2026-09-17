@@ -6,7 +6,7 @@ kubernetes_version = "1.35"
 
 github_oidc_provider_arn = "arn:aws:iam::935776475838:oidc-provider/token.actions.githubusercontent.com"
 github_app_subject       = "repo:SagarSangishetty@143182794/histdata-app@1367058462:ref:refs/heads/main"
-github_deploy_subject    = "repo:SagarSangishetty@143182794/histdata-k8s-deployments@1367082451:ref:refs/heads/main"
+github_deploy_subject    = "repo:SagarSangishetty@143182794/histdata-k8s-deployments@1367082451:environment:dev"
 sso_admin_role_arn       = "arn:aws:iam::935776475838:role/aws-reserved/sso.amazonaws.com/AWSReservedSSO_AdministratorAccess_2b6037c295c49db8"
 
 domain_name    = "dev.histdata.sagarshetty.online"
