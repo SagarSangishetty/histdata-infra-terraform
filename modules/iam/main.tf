@@ -118,57 +118,9 @@ resource "aws_iam_role" "alb_controller" {
 }
 
 resource "aws_iam_role_policy" "alb_controller" {
-  name = "aws-load-balancer-controller"
-  role = aws_iam_role.alb_controller.id
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Effect   = "Allow"
-        Action   = ["iam:CreateServiceLinkedRole"]
-        Resource = "*"
-        Condition = {
-          StringEquals = { "iam:AWSServiceName" = "elasticloadbalancing.amazonaws.com" }
-        }
-      },
-      {
-        Effect = "Allow"
-        Action = [
-          "ec2:DescribeAccountAttributes", "ec2:DescribeAddresses", "ec2:DescribeAvailabilityZones",
-          "ec2:DescribeInternetGateways", "ec2:DescribeVpcs", "ec2:DescribeVpcPeeringConnections",
-          "ec2:DescribeSubnets", "ec2:DescribeSecurityGroups", "ec2:DescribeInstances",
-          "ec2:DescribeNetworkInterfaces", "ec2:DescribeTags", "ec2:GetCoipPoolUsage",
-          "ec2:DescribeCoipPools", "ec2:GetSecurityGroupsForVpc", "elasticloadbalancing:DescribeLoadBalancers",
-          "elasticloadbalancing:DescribeLoadBalancerAttributes", "elasticloadbalancing:DescribeListeners",
-          "elasticloadbalancing:DescribeListenerCertificates", "elasticloadbalancing:DescribeSSLPolicies",
-          "elasticloadbalancing:DescribeRules", "elasticloadbalancing:DescribeTargetGroups",
-          "elasticloadbalancing:DescribeTargetGroupAttributes", "elasticloadbalancing:DescribeTargetHealth",
-          "elasticloadbalancing:DescribeTags", "elasticloadbalancing:DescribeTrustStores",
-          "elasticloadbalancing:DescribeListenerAttributes", "elasticloadbalancing:DescribeCapacityReservation"
-        ]
-        Resource = "*"
-      },
-      {
-        Effect = "Allow"
-        Action = [
-          "ec2:AuthorizeSecurityGroupIngress", "ec2:RevokeSecurityGroupIngress",
-          "ec2:CreateSecurityGroup", "ec2:DeleteSecurityGroup", "ec2:CreateTags", "ec2:DeleteTags",
-          "elasticloadbalancing:CreateLoadBalancer", "elasticloadbalancing:CreateTargetGroup",
-          "elasticloadbalancing:CreateListener", "elasticloadbalancing:CreateRule",
-          "elasticloadbalancing:DeleteLoadBalancer", "elasticloadbalancing:DeleteTargetGroup",
-          "elasticloadbalancing:DeleteListener", "elasticloadbalancing:DeleteRule",
-          "elasticloadbalancing:ModifyLoadBalancerAttributes", "elasticloadbalancing:ModifyTargetGroup",
-          "elasticloadbalancing:ModifyTargetGroupAttributes", "elasticloadbalancing:ModifyListener",
-          "elasticloadbalancing:ModifyRule", "elasticloadbalancing:AddTags", "elasticloadbalancing:RemoveTags",
-          "elasticloadbalancing:RegisterTargets", "elasticloadbalancing:DeregisterTargets",
-          "elasticloadbalancing:SetIpAddressType", "elasticloadbalancing:SetSecurityGroups",
-          "elasticloadbalancing:SetSubnets", "elasticloadbalancing:AddListenerCertificates",
-          "elasticloadbalancing:RemoveListenerCertificates", "elasticloadbalancing:SetWebAcl"
-        ]
-        Resource = "*"
-      }
-    ]
-  })
+  name   = "aws-load-balancer-controller"
+  role   = aws_iam_role.alb_controller.id
+  policy = file("${path.module}/policies/aws-load-balancer-controller-v3.5.0.json")
 }
 
 # GitHub Actions role used by the application repository to push images to ECR.
