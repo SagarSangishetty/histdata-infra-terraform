@@ -1,0 +1,14 @@
+output "cluster_name" { value = module.eks.cluster_name }
+output "vpc_id" { value = module.network.vpc_id }
+output "ecr_repository_url" { value = module.ecr.repository_url }
+output "historical_data_bucket" { value = module.storage.bucket_id }
+output "oracle_endpoint" { value = module.rds.endpoint }
+output "oracle_master_secret_arn" { value = module.rds.master_secret_arn }
+output "oracle_application_secret_arn" { value = module.rds.application_secret_arn }
+output "app_irsa_role_arn" { value = module.iam.app_irsa_role_arn }
+output "alb_controller_role_arn" { value = module.iam.alb_controller_role_arn }
+output "external_secrets_role_arn" { value = module.iam.external_secrets_role_arn }
+output "github_actions_role_arn" { value = module.iam.github_actions_role_arn }
+output "github_deploy_role_arn" { value = module.iam.github_deploy_role_arn }
+output "acm_certificate_arn" { value = module.dns.certificate_arn }
+output "datasync_task_arn" { value = module.datasync.task_arn }
