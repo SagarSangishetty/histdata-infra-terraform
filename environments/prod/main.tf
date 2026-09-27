@@ -122,3 +122,24 @@ resource "aws_eks_access_policy_association" "sso_admin" {
     type = "cluster"
   }
 }
+
+#Allowing prod role actions on the dev repository ARN
+resource "aws_iam_role_policy" "dev_ecr_pull" {
+  name = "pull-dev-histdata-image"
+  role = "histdata-prod-github-actions"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Effect = "Allow"
+      Action = [
+        "ecr:BatchCheckLayerAvailability",
+        "ecr:BatchGetImage",
+        "ecr:GetDownloadUrlForLayer"
+      ]
+      Resource = "arn:aws:ecr:us-east-1:935776475838:repository/histdata-app"
+    }]
+  })
+
+  depends_on = [module.iam]
+}

@@ -122,3 +122,28 @@ resource "aws_eks_access_policy_association" "sso_admin" {
     type = "cluster"
   }
 }
+
+# For accessing dev ecr repo we are adding the below code.
+
+resource "aws_ecr_repository_policy" "prod_promotion_pull" {
+  repository = "histdata-app"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Sid    = "AllowProdPromotionRoleToPull"
+      Effect = "Allow"
+      Principal = {
+        AWS = "arn:aws:iam::708553018735:role/histdata-prod-github-actions"
+      }
+      Action = [
+        "ecr:BatchCheckLayerAvailability",
+        "ecr:BatchGetImage",
+        "ecr:GetDownloadUrlForLayer"
+      ]
+      Resource = "*"
+    }]
+  })
+
+  depends_on = [module.ecr]
+}
