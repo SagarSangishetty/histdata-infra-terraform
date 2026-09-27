@@ -134,7 +134,12 @@ resource "aws_ecr_repository_policy" "prod_promotion_pull" {
       Sid    = "AllowProdPromotionRoleToPull"
       Effect = "Allow"
       Principal = {
-        AWS = "arn:aws:iam::708553018735:role/histdata-prod-github-actions"
+        AWS = "arn:aws:iam::708553018735:root"
+      }
+      Condition = {
+        ArnEquals = {
+          "aws:PrincipalArn" = "arn:aws:iam::708553018735:role/histdata-prod-github-actions"
+        }
       }
       Action = [
         "ecr:BatchCheckLayerAvailability",
